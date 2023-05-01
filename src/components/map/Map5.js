@@ -2,6 +2,7 @@ import { Map, GoogleApiWrapper } from 'google-maps-react';
 import { useEffect, useRef, useState } from 'react';
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { TripsLayer } from '@deck.gl/geo-layers';
+import { ScatterplotLayer } from 'deck.gl';
 
 const MapContainer = props => {
   const mapRef = useRef(null);
@@ -18,24 +19,49 @@ const MapContainer = props => {
     });
     deckOverlay.current = overlay;
 
-    const layer = new TripsLayer({
-      id: 'trips',
-      data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/trips/trips-v7.json',
-      getPath: d => d.path,
-      getTimestamps: d => d.timestamps,
-      getColor: d => {
-        const vendorColors = [
-          [255, 0, 0],
-          [0, 0, 255],
-        ];
-        return vendorColors[d.vendor];
-      },
-      opacity: 1,
-      widthMinPixels: 2,
-      trailLength: 180,
-      currentTime: 0,
-      shadowEnabled: false,
+    const data = [
+      { position: [-122.419416, 37.774929], size: 100 },
+      { position: [-122.416557, 37.778443], size: 100 },
+      { position: [-122.410369, 37.782043], size: 100 },
+    ];
+
+    // const layer = new ScatterplotLayer({
+    //   id: 'scatterplot-layer',
+    //   data,
+    //   getPosition: d => d.position,
+    //   getRadius: d => d.size,
+    //   getColor: [255, 0, 0],
+    // });
+
+    const layer = new ScatterplotLayer({
+      id: 'scatterplot-layer',
+      data,
+      getPosition: d => d.position,
+      // getPosition: [-80.4925337, 43.4516395],
+      getRadius: d => d.size,
+      getColor: [255, 0, 0],
     });
+
+    // const layer = new TripsLayer({
+    //   id: 'trips',
+    //   data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/trips/trips-v7.json',
+    //   getPath: d => d.path,
+    //   getTimestamps: d => d.timestamps,
+    //   getColor: d => {
+    //     const vendorColors = [
+    //       [255, 0, 0],
+    //       [0, 0, 255],
+    //     ];
+    //     return vendorColors[d.vendor];
+    //   },
+    //   opacity: 1,
+    //   widthMinPixels: 2,
+    //   trailLength: 180,
+    //   currentTime: 0,
+    //   shadowEnabled: false,
+    // });
+
+    console.log(map);
 
     console.log(map);
 
@@ -44,12 +70,12 @@ const MapContainer = props => {
       layers: [layer],
     });
 
-    const animate = () => {
-      const currentTime = (layer.props.currentTime + 1) % 1800;
-      layer.setProps?.({ currentTime });
-      window.requestAnimationFrame(animate);
-    };
-    window.requestAnimationFrame(animate);
+    // const animate = () => {
+    //   const currentTime = (layer.props.currentTime + 1) % 1800;
+    //   layer.setProps?.({ currentTime });
+    //   window.requestAnimationFrame(animate);
+    // };
+    // window.requestAnimationFrame(animate);
   }, [loaded]);
 
   return (

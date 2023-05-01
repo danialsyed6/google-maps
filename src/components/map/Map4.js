@@ -15,6 +15,8 @@ const MapContainer = props => {
 
   const [viewport, setViewport] = useState(null);
 
+  console.log(viewport);
+
   const map = useRef();
 
   useEffect(() => {
